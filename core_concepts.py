@@ -126,7 +126,11 @@ def new_way():
                               timeout=30,
                               max_retries=3)
     
-    anthropic_model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+    # NOTE (2026-11): Claude Sonnet 4.5 retires 2026-11-30, so this uses claude-sonnet-5-5.
+    # thinking="between_tools" keeps the plain-text replies shown in the video (Sonnet 5.5 thinks by default).
+    anthropic_model = ChatAnthropic(
+        model="claude-sonnet-5-5", thinking={"type": "between_tools"}
+    )
 
 
 if __name__ == "__main__":

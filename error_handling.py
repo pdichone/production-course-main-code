@@ -159,8 +159,13 @@ class FallbackChain:
             ("gpt-4o", ChatOpenAI(model="gpt-4o", temperature=0, timeout=10)),
             (
                 "claude-sonnet",
+                # NOTE (2026-11): Claude Sonnet 4.5 retires 2026-11-30, so this uses claude-sonnet-5-5.
+                # The video sets temperature=0; Sonnet 5.5 rejects non-default temperature (400),
+                # so it is dropped. thinking="between_tools" keeps plain-text replies.
                 ChatAnthropic(
-                    model="claude-sonnet-4-5-20250929", temperature=0, timeout=10
+                    model="claude-sonnet-5-5",
+                    thinking={"type": "between_tools"},
+                    timeout=10,
                 ),
             ),
         ]

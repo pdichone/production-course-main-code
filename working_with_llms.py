@@ -28,10 +28,13 @@ def demo_init_chat_model():
 
     # easy to switch model providers
     if os.getenv("ANTHROPIC_API_KEY"):
+        # NOTE (2026-11): Claude Sonnet 4.5 retires 2026-11-30, so this uses claude-sonnet-5-5.
+        # The video passes temperature=0.7 here too; Sonnet 5.5 rejects non-default temperature
+        # (400), so it is dropped. thinking="between_tools" keeps response.content a plain string.
         claude = init_chat_model(
-            model="claude-sonnet-4-5-20250929",
+            model="claude-sonnet-5-5",
             model_provider="anthropic",
-            temperature=0.7,
+            thinking={"type": "between_tools"},
             streaming=True,
             max_retries=3,
         )
@@ -58,10 +61,11 @@ def demo_model_comparison():
 
     # add anthropic model if available
     if os.getenv("ANTHROPIC_API_KEY"):
-        models["claude-sonnet-4-5-20250929"] = init_chat_model(
-            model="claude-sonnet-4-5-20250929",
+        # NOTE (2026-11): same change as above - claude-sonnet-5-5, no temperature (400 on Sonnet 5.5).
+        models["claude-sonnet-5-5"] = init_chat_model(
+            model="claude-sonnet-5-5",
             model_provider="anthropic",
-            temperature=0.7,
+            thinking={"type": "between_tools"},
             streaming=False,
         )
 
