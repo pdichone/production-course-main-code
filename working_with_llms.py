@@ -16,7 +16,9 @@ load_dotenv()
 
 def demo_init_chat_model():
     chat_model = init_chat_model(
-        model="gpt-4o-mini",
+        # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+        model="gpt-6-luna",
+        reasoning_effort="none",
         # model_provider="openai",
         temperature=0.7,
         streaming=True,
@@ -47,13 +49,15 @@ def demo_model_comparison():
     prompt = "Explain recursion in one sentence."
 
     models = {
-        "gpt-4o-mini": init_chat_model(
-            model="gpt-4o-mini",
+        "gpt-6-luna": init_chat_model(
+            model="gpt-6-luna",
+            reasoning_effort="none",
             temperature=0.7,
             streaming=False,
         ),
-        "gpt-4o": init_chat_model(
-            model="gpt-4o",
+        "gpt-6-sol": init_chat_model(
+            model="gpt-6-sol",
+            reasoning_effort="none",
             temperature=0.7,
             streaming=False,
         ),
@@ -77,7 +81,7 @@ def demo_model_comparison():
 
 
 def demo_message():
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     # using message objects (more control over roles)
     messages = [
@@ -107,7 +111,7 @@ def exercise_multi_model():
     2. Gets responses from all models
     3. Returns a dict of {model_name: response}
 
-    Test with: question="What is AI?", models=["gpt-4o-mini", "gpt-4o"]
+    Test with: question="What is AI?", models=["gpt-6-luna", "gpt-6-sol"]
     """
 
     def get_responses(question: str, model_names: list[str]) -> dict[str, str]:
@@ -115,6 +119,7 @@ def exercise_multi_model():
         for model_name in model_names:
             model = init_chat_model(
                 model=model_name,
+                reasoning_effort="none",
                 temperature=0.7,
                 streaming=False,
             )
@@ -123,7 +128,7 @@ def exercise_multi_model():
         return responses
 
     # Test the function
-    results = get_responses("What is AI?", ["gpt-4o-mini", "gpt-4o"])
+    results = get_responses("What is AI?", ["gpt-6-luna", "gpt-6-sol"])
     for model, answer in results.items():
         print(f"Response from {model}: {answer}\n")
 

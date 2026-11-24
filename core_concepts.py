@@ -18,7 +18,8 @@ def demo_basic_chain():
     prompt = ChatPromptTemplate.from_template(
         "You are a helpful assistant. Answer in one sentence: {question}"
     )
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
     parser = StrOutputParser()
 
     # Compose with pipe operator
@@ -34,7 +35,7 @@ def demo_basic_chain():
 def demo_batch_exectution():
     """Demonstrate batch execution for multiple inputs."""
     prompt = ChatPromptTemplate.from_template("Translate to French: {text}")
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
     parser = StrOutputParser()
 
     chain = prompt | model | parser
@@ -55,7 +56,8 @@ def demo_streaming():
     """Demonstrate streaming for real-time output."""
     prompt = ChatPromptTemplate.from_template("Write a haiku about: {topic}")
     model = ChatOpenAI(
-        model="gpt-4o-mini",
+        model="gpt-6-luna",
+        reasoning_effort="none",
         temperature=0.7,
     )
     parser = StrOutputParser()
@@ -72,7 +74,7 @@ def demo_streaming():
 def demo_schema_inspection():
     """Demonstrate input/output schema inspection."""
     prompt = ChatPromptTemplate.from_template("Summarize the following text: {text}")
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
     parser = StrOutputParser()
 
     chain = prompt | model | parser
@@ -101,7 +103,7 @@ def exercise_first_chain():
     prompt = ChatPromptTemplate.from_template(
         "Create a marketing tagline for a product named '{product}' targeting '{audience}'."
     )
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
     parser = StrOutputParser()
 
     chain = prompt | model | parser
@@ -113,14 +115,14 @@ def exercise_first_chain():
 
 def new_way():
     # the univeral way to initialize a model
-    model = init_chat_model("gpt-4o-mini", temperature=0.7, max_tokens=1500)
+    model = init_chat_model("gpt-6-luna", reasoning_effort="none", temperature=0.7, max_tokens=1500)
 
     # Or provider-specific (still works)
 
     from langchain_openai import ChatOpenAI
     from langchain_anthropic import ChatAnthropic
 
-    openai_model = ChatOpenAI(model="gpt-4o-mini",
+    openai_model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none",
                               temperature=0.7,
                               max_tokens=1500,
                               timeout=30,

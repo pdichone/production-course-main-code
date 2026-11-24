@@ -155,8 +155,9 @@ class FallbackChain:
 
     def __init__(self):
         self.models = [
-            ("gpt-4o-mini", ChatOpenAI(model="gpt-4o-mini", temperature=0, timeout=10)),
-            ("gpt-4o", ChatOpenAI(model="gpt-4o", temperature=0, timeout=10)),
+            # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+            ("gpt-6-luna", ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0, timeout=10)),
+            ("gpt-6-sol", ChatOpenAI(model="gpt-6-sol", reasoning_effort="none", temperature=0, timeout=10)),
             (
                 "claude-sonnet",
                 # NOTE (2026-11): Claude Sonnet 4.5 retires 2026-11-30, so this uses claude-sonnet-5-5.
@@ -240,7 +241,7 @@ class RobustState(TypedDict):
 def create_robust_agent():
     """Create agent with built-in error handling."""
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def process_with_retry(state: RobustState) -> dict:
         """Process with retry logic built-in."""

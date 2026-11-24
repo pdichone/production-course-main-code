@@ -63,7 +63,8 @@ class AIResearchAssistant:
         # 1. Embeddings - turns text into vectors
         self.embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
         # 2. Splitter - breaks big docs into chunks
         self.splitter = RecursiveCharacterTextSplitter(

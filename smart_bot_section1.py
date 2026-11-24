@@ -40,11 +40,12 @@ class QAResponse(BaseModel):
 class SmartQABot:
     def __init__(
         self,
-        model_name: str = "gpt-4o-mini",
+        model_name: str = "gpt-6-luna",
         temperature: float = 0.3,
     ):
         self.model = ChatOpenAI(
             model=model_name,
+            reasoning_effort="none",  # NOTE (2026-11): needed for temperature on gpt-6-luna
             temperature=temperature,
         ).with_structured_output(QAResponse)
         self.prompt = ChatPromptTemplate.from_messages(

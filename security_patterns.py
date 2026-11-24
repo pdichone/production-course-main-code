@@ -139,7 +139,8 @@ class SecurityGuard:
     """Use LLM to detect malicious intent."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
         self.prompt = ChatPromptTemplate.from_messages(
             [
@@ -267,7 +268,7 @@ class SecurePipeline:
         self.pii_detector = PIIDetector()
         self.guard = SecurityGuard()
         self.validator = OutputValidator()
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     @traceable(name="secure_process")
     def process(self, user_input: str) -> dict:

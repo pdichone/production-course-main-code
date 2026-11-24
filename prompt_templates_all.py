@@ -45,7 +45,8 @@ def demo_basic_templates():
 def demo_message_types():
     """Working with different message types."""
 
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     # Build conversation manually
     messages = [
@@ -83,7 +84,7 @@ def demo_messages_placeholder():
         print(f"  {type(msg).__name__}: {msg.content[:50]}...")
 
     # Execute
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
     
     chain = prompt | model
     response = chain.invoke({"history": history, "question": "What's my name?"})
@@ -124,7 +125,7 @@ def demo_few_shot():
     )
 
     # Test
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
     chain = final_prompt | model
 
     response = chain.invoke({"word": "bright"})
@@ -146,7 +147,7 @@ def demo_prompt_composition():
     full_prompt = persona + task
 
     # Test different combinations
-    model = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
     chain = full_prompt | model
 
     # As a pirate

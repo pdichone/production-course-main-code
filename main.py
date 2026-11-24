@@ -16,7 +16,8 @@ print(f"langgraph version: {lg_version}")
 def main():
 
     # Test openai
-    llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+    # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+    llm = ChatOpenAI(model_name="gpt-6-luna", reasoning_effort="none", temperature=0)
     response = llm.invoke("Say 'setup complete!' in one word")
     print(f"Response from ChatOpenAI: {response}")
 

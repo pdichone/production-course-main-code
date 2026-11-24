@@ -6,6 +6,7 @@ Modern approaches to maintaining conversation context
 from langchain_openai import ChatOpenAI
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages.utils import count_tokens_approximately
 from langchain_core.messages import (
     HumanMessage,
     AIMessage,
@@ -24,7 +25,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-llm = init_chat_model("gpt-4o-mini")
+# NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+llm = init_chat_model("gpt-6-luna", reasoning_effort="none")
 
 
 def demo_basic_memory():
@@ -35,7 +37,7 @@ def demo_basic_memory():
     print("Using RunnableWithMessageHistory (modern approach)")
     print("=" * 60)
 
-    # llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    # llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
 
     # Prompt with history placeholder
     prompt = ChatPromptTemplate.from_messages(
@@ -187,7 +189,9 @@ def demo_message_trimming():
         messages,
         max_tokens=60,
         strategy="last",
-        token_counter=llm,
+        # NOTE (2026-11): the video passes token_counter=llm. langchain-openai has no tokenizer
+        # for gpt-6-luna yet (NotImplementedError), so use the built-in approximate counter.
+        token_counter=count_tokens_approximately,
         include_system=True,  # Always keep system message
         allow_partial=False,
     )
@@ -286,8 +290,8 @@ def demo_summary_memory():
     print("=" * 60)
 
     # --- Setup ---
-    summary_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    chat_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+    summary_llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
+    chat_llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
 
     # The conversation prompt: summary of old context + recent messages
     chat_prompt = ChatPromptTemplate.from_messages(
@@ -487,7 +491,7 @@ def exercise_persistent_memory_proof():
 
     # --- Helper: build a fresh chain (simulates a new program run) ---
     def build_chain():
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+        llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
 
         def get_session_history(sid: str) -> BaseChatMessageHistory:
             return SQLChatMessageHistory(

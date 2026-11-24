@@ -21,7 +21,8 @@ class QAChain:
     """Simple Q&A chain for testing."""
 
     def __init__(self, llm=None):
-        self.llm = llm or ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+        self.llm = llm or ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
         self.prompt = ChatPromptTemplate.from_template(
             "Answer this question: {question}"
         )
@@ -64,7 +65,7 @@ class IntegrationTestSuite:
     """Integration tests with real LLM calls."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     @traceable(name="integration_test")
     def test_basic_qa(self) -> dict:
@@ -127,7 +128,7 @@ class LLMEvaluator:
     """Use LLM to evaluate LLM outputs."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     @traceable(name="evaluate_response")
     def evaluate(self, question: str, response: str, reference: str = None) -> dict:
@@ -248,7 +249,7 @@ def demo_regression_testing():
     """Demonstrate regression testing."""
 
     # Simple chain to test
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def qa_chain(question: str) -> str:
         return llm.invoke(question).content
@@ -293,7 +294,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = Client()
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
 
 # ============================================================
@@ -373,7 +374,7 @@ def qa_target(inputs: dict) -> dict:
 # ============================================================
 
 # Evaluator: checks correctness against reference using LLM-as-judge
-eval_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+eval_llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
 
 def correctness(run, example) -> dict:

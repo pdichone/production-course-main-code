@@ -34,7 +34,8 @@ messages = prompt.format_messages(
 
 # print(messages)
 
-# model = init_chat_model(model="gpt-4o-mini", temperature=0)
+# NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+# model = init_chat_model(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 # response = model.invoke(messages)
 # print(response.content)
 
@@ -86,7 +87,7 @@ final_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-model = init_chat_model(model="gpt-4o-mini", temperature=0)
+model = init_chat_model(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 response = model.invoke(final_prompt.format_messages(input="happy"))
 
 print(response.content)

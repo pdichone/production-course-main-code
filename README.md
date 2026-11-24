@@ -28,7 +28,7 @@ Put these in `.env`. Never commit `.env`; it is already in `.gitignore`.
 
 | Key | Needed for | Required? |
 |---|---|---|
-| `OPENAI_API_KEY` | Most lectures (`gpt-4o-mini`, OpenAI embeddings) | Yes |
+| `OPENAI_API_KEY` | Most lectures (`gpt-6-luna`, OpenAI embeddings) | Yes |
 | `ANTHROPIC_API_KEY` | Claude examples (`main.py`, `working_with_llms.py`, `error_handling.py`) | Recommended |
 | `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, `LANGSMITH_TRACING` | Tracing and observability lectures | Optional |
 
@@ -68,9 +68,15 @@ what changed and why.
 Current Claude model: `claude-sonnet-5-5` (Claude Sonnet 4.5 retires on 2026-11-30).
 Claude Sonnet 5.5 rejects a non-default `temperature`, so Claude examples no longer pass one.
 
+Current OpenAI model: `gpt-6-luna` (OpenAI shuts down `gpt-4o` and `gpt-4o-mini` on 2027-01-14).
+The premium tier in the routing/fallback demos uses `gpt-6-sol`. Both need `reasoning_effort="none"`
+to accept `temperature` or tools, so every OpenAI call passes it.
+
 ## 6. Troubleshooting
 
 - **`ModuleNotFoundError`**: run `uv sync` again, and run scripts with `uv run python ...`.
 - **`greenlet` / SQLAlchemy error in `conversation_memory.py`**: pull the latest code and run `uv sync`. `greenlet` is now a direct dependency.
 - **`401` / authentication error**: check the key in `.env` and that there are no quotes or spaces around it.
 - **Anthropic `400` mentioning `temperature`**: remove `temperature=` from the `ChatAnthropic` call.
+- **OpenAI `400` "Only the default (1) value is supported" or "Function tools with reasoning_effort are not supported"**: add `reasoning_effort="none"` to the `ChatOpenAI` / `init_chat_model` call.
+- **OpenAI `404` model not found for `gpt-4o-mini`**: that model is shut down. Use `gpt-6-luna` plus `reasoning_effort="none"`.

@@ -55,7 +55,8 @@ LangChain itself is open source and free. LangSmith (the observability platform)
 Install with: pip install langchain langchain-openai
 Create your first chain in under 10 lines of code.
 """
-llm = init_chat_model(model="gpt-4o-mini", temperature=0.2)
+# NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+llm = init_chat_model(model="gpt-6-luna", reasoning_effort="none", temperature=0.2)
 
 
 def create_kb():
@@ -283,7 +284,7 @@ def exercise_document_qa():
             self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 3})
 
             # Create chain
-            self.llm = init_chat_model(model="gpt-4o-mini", temperature=0.2)
+            self.llm = init_chat_model(model="gpt-6-luna", reasoning_effort="none", temperature=0.2)
 
             self.prompt = ChatPromptTemplate.from_template(
                 """

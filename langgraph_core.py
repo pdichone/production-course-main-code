@@ -110,7 +110,8 @@ class MessageState(TypedDict):
 
 
 def demo_message_state():
-    llm = init_chat_model("gpt-4o-mini", temperature=0)
+    # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+    llm = init_chat_model("gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def chat_node(state: MessageState) -> dict:
         response = llm.invoke(state["messages"])
@@ -140,7 +141,7 @@ class MultiStepState(TypedDict):
 
 
 def demo_multi_node_graph():
-    llm = init_chat_model("gpt-4o-mini", temperature=0)
+    llm = init_chat_model("gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def analyze_node(state: MultiStepState) -> dict:
         response = llm.invoke(
@@ -218,7 +219,7 @@ def exercise_first_langgraph():
         questions: str
         answer: str
 
-    llm = init_chat_model("gpt-4o-mini", temperature=0)
+    llm = init_chat_model("gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def generate_questions(state: QAState) -> dict:
         response = llm.invoke(

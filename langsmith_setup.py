@@ -21,7 +21,8 @@ os.environ["LANGSMITH_TRACING"] = "true"
 def demo_basic_tracing():
     """Basic LangSmith tracing."""
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+    llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     prompt = ChatPromptTemplate.from_template("Explain {topic} in one sentence.")
 
@@ -40,7 +41,7 @@ def demo_basic_tracing():
 def demo_named_runs():
     """Name your runs for easier identification."""
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     prompt = ChatPromptTemplate.from_template("Summarize: {text}")
 
@@ -60,7 +61,7 @@ def demo_named_runs():
 def demo_trace_with_metadata(user_id: str, request_type: str):
     """Add metadata to traces for filtering."""
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     # Metadata is automatically captured
     result = llm.invoke(f"Hello from user {user_id}")

@@ -23,8 +23,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-creative_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+# NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
+creative_llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0.7)
 
 
 # ============================================================

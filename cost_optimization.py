@@ -21,9 +21,10 @@ class ModelRouter:
     """Route queries to appropriate model based on complexity."""
 
     def __init__(self):
-        self.cheap_model = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-        self.expensive_model = ChatOpenAI(model="gpt-4o", temperature=0)
-        self.classifier = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        # NOTE (2026-11): gpt-4o-mini/gpt-4o shut down 2027-01-14 -> gpt-6-luna. reasoning_effort="none" lets it accept temperature + tools.
+        self.cheap_model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
+        self.expensive_model = ChatOpenAI(model="gpt-6-sol", reasoning_effort="none", temperature=0)
+        self.classifier = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def classify_complexity(self, query: str) -> str:
         """Classify query complexity."""
@@ -54,12 +55,12 @@ Respond with only: simple or complex
 
         if complexity == "simple":
             model = self.cheap_model
-            model_name = "gpt-4o-mini"
-            cost_per_1k = 0.00015  # Input cost
+            model_name = "gpt-6-luna"
+            cost_per_1k = 0.0001  # Input cost (gpt-6-luna: $0.10 / 1M)
         else:
             model = self.expensive_model
-            model_name = "gpt-4o"
-            cost_per_1k = 0.0025  # Input cost
+            model_name = "gpt-6-sol"
+            cost_per_1k = 0.002  # Input cost (gpt-6-sol: $2.00 / 1M)
 
         response = model.invoke(query)
 
@@ -104,7 +105,7 @@ class SemanticCache:
     def __init__(self, similarity_threshold: float = 0.9):
         self.cache = {}
         self.threshold = similarity_threshold
-        self.embedder = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.embedder = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
 
     def _hash_query(self, query: str) -> str:
         """Create hash of normalized query."""
@@ -137,7 +138,7 @@ class CachedLLM:
     """LLM wrapper with caching."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
         self.cache = SemanticCache()
         self.cache_hits = 0
         self.cache_misses = 0
@@ -237,7 +238,7 @@ class BudgetedLLM:
     """LLM with token budgeting."""
 
     def __init__(self, max_tokens: int = 4000):
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        self.llm = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none", temperature=0)
         self.budget = TokenBudget(max_tokens_per_request=max_tokens)
 
     @traceable(name="budgeted_invoke")
